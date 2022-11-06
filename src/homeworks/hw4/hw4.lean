@@ -13,7 +13,9 @@ answer.
 -/
 
 def and_associative : Prop := 
-  _
+  ∀ (P Q R : Prop),
+  P ∧ (Q ∧ R) ↔ (P ∧ Q) ∧ R
+
 
 
 /- #1B [10 points]
@@ -22,9 +24,20 @@ Give an English language proof. Identify
 the inference rules of predicate logic
 that you use in your reasoning.
 -/
-
+-- Assuming P ∧ (Q ∧ R) is true
 /-
-Answer: 
+Answer: Given 3 propositions P Q R, assuming P ∧ (Q ∧ R) to be true, to 
+prove the biimplication we must prove that they both individually imply each 
+other using iff intro (P → Q), (Q → P) → (P ↔ Q)
+
+We assume the premise P ∧ (Q ∧ R) and attempt to conclude (P ∧ Q) ∧ R
+we use and elimination to split the assumptions into P Q R then using and
+introduction to combine the assumptions into our conclusion (P ∧ Q) ∧ R
+
+Now we assume the premise (P ∧ Q) ∧ R and attempt to conclude P ∧ (Q ∧ R)
+we use and elimination to split the assumptions into P Q R then using and
+introduction to combine the assumptions into our conclusion P ∧ (Q ∧ R)
+
 -/
 
 /- #1C [5 points]
@@ -35,6 +48,21 @@ Hint: unfold and_associative to start.
 
 theorem and_assoc_true : and_associative :=
 begin
+unfold and_associative,
+assume P Q R,
+apply iff.intro,
+assume h1,
+cases h1 with p qr,
+cases qr with q r,
+let pq: P ∧ Q := and.intro p q,
+apply and.intro pq r,
+
+assume h2,
+cases h2 with pq r,
+cases pq with p q,
+let qr: Q ∧ R := and.intro q r,
+apply and.intro p qr,
+
 end
 
 
@@ -46,7 +74,8 @@ analogous to the proposition about ∧ in #1.
 -/
 
 def or_associative : Prop := 
-  _
+  ∀ (P Q R : Prop),
+  P ∨ (Q ∨  R) ↔ (P ∨  Q) ∨  R
 
 
 /- #2B [10 points]
@@ -56,6 +85,19 @@ the specific inference rules you use in your
 reasoning.
 -/
 
+/- Answer
+Given 3 propositions P Q R, assuming P ∨  (Q ∨  R) to be true, to 
+prove the biimplication we must prove that they both individually imply each 
+other using iff intro (P → Q), (Q → P) → (P ↔ Q)
+
+We assume the premise P ∨ (Q ∨ R) and attempt to conclude (P ∧ Q) ∧ R
+we use and elimination to split the assumptions into P Q R then using and
+introduction to combine the assumptions into our conclusion (P ∧ Q) ∧ R
+
+Now we assume the premise (P ∧ Q) ∧ R and attempt to conclude P ∧ (Q ∧ R)
+we use and elimination to split the assumptions into P Q R then using and
+introduction to combine the assumptions into our conclusion P ∧ (Q ∧ R)
+-/
 
 /- #2C [5 points]
 
@@ -64,6 +106,29 @@ Complete the following formal proof.
 
 theorem or_associative_true : or_associative :=
 begin
+unfold or_associative,
+assume P Q R,
+apply iff.intro,
+assume h1,
+cases h1 with p qr,
+let pq := or.inl p,
+exact or.inl pq,
+
+cases qr with q r,
+let pq := or.inr q,
+exact or.inl pq,
+exact or.inr r,
+
+assume h2,
+cases h2 with  pq r,
+cases pq with p q,
+exact or.inl p,
+let qr := or.inl q,
+exact or.inr qr,
+let qr := or.inr r,
+exact or.inr qr,
+
+
 end
 
 
@@ -72,7 +137,8 @@ Write a formal statement of the proposition.
 -/
 
 def arrow_transitive : Prop :=
-  _
+  ∀ (X Y Z : Prop),
+  (X → Y) → (Y → Z) → (X → Z)
 
 
 /- #3B [10 points]
@@ -88,11 +154,27 @@ of an implication to a proof of its premise to get
 yourself a proof of its conclusion.
 -/
 
+/-
+Assuming P → Q , Q → R, and P
+
+
+
+-/
 
 /- #3C [5 points]. 
 Write a formal proof of it.
 -/
-
+theorem arrow_transitive_true : arrow_transitive :=
+begin
+unfold arrow_transitive,
+assume X Y Z,
+assume xy: X → Y,
+assume yz: Y → Z,
+assume X,
+let y: Y := (xy X),
+let z: Z := (yz y),
+exact z,
+end
 
 /- #4
 Suppose that if it's raining then the streets
@@ -108,19 +190,31 @@ logic by completing the following answer.
 
 def contrapositive : Prop :=
   ∀ (Raining Wet : Prop), 
-    (Raining → Wet) → (¬Raining → ¬Wet)
+    (Raining → Wet) → (¬Wet → ¬Raining) 
 
+-- switch not raining and not wet
 
 /- #4B [10 points]. 
 -/
 
 theorem contrapositive_valid : contrapositive :=
 begin
+unfold contrapositive,
+assume R W,
+assume h1,
+assume not,
+assume R,
+let w := h1 R,
+contradiction,
 
+end
 /- #4C [5 points]. 
 
 Give an English language proof of it.
 -/
+--Assuming 
+
+
 
 
 /- #5. Extra credit.
@@ -141,7 +235,18 @@ begin
 assume em X Y nxory,
 cases (em X) with x nx,
 let foo := or.intro_left Y x,
-_
+
+let f := nxory foo,
+exact false.elim f,
+
+cases (em Y) with y ny,
+have xOry := or.inr y,
+
+let f := nxory xOry,
+exact false.elim f,
+
+exact and.intro nx ny,
+
 end
 
 /-

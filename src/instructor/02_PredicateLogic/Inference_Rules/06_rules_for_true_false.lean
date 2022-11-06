@@ -114,12 +114,12 @@ def p6 : Prop := false → 0 = 0
 def p7 : Prop := ∀ (P : Prop), true → P
 def p8 : Prop := ∀ (P : Prop), false → P 
 
-theorem p8_is_true : p8 := 
+theorem p8_is_true : p3 := 
 begin
-unfold p8,
+unfold p3,
 assume P,
-assume f,
-apply false.elim f,
+apply true.intro,
+
 end 
 
 /-

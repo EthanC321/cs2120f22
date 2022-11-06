@@ -56,7 +56,7 @@ begin
   -/
   intro p,
   show Q,
-  _
+  
 end 
 
 /-

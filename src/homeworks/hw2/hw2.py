@@ -26,15 +26,13 @@ def hw2():
     r = s.check()
     
     # If there's a model/solution return it 
-    if (r == unsat):
-        print("C1 is valid")
+    valid(r,"C1",s)
     # otherwise return inconsistent value for error
-    else :
-        print("Here's a counter-example: ", s.model() )
+    
         
     #2. X, Y ⊢ X ∧ Y
     s.reset()
-    C2 = Implies(Y,And(X,Y))
+    C2 = Implies(And(X,Y),And(X,Y))
     
     s.add(Not(C2))
     # I believe it's not valid
@@ -42,12 +40,7 @@ def hw2():
     r = s.check()
     
     # If there's a model/solution return it 
-    if (r == unsat):
-        print("C2 is valid")
-    # otherwise return inconsistent value for error
-    else :
-        print("Here's a counter-example: ", s.model() )
-    
+    valid(r,"C2",s)
     #3. X ∧ Y ⊢ X
     s.reset()
     C3 = Implies(And(X,Y),X)
@@ -58,11 +51,7 @@ def hw2():
     r = s.check()
     
     # If there's a model/solution return it 
-    if (r == unsat):
-        print("C3 is valid")
-    # otherwise return inconsistent value for error
-    else :
-        print("Here's a counter-example: ", s.model() )
+    valid(r,"C3",s)
     
     #4. X ∧ Y ⊢ Y
     s.reset()
@@ -74,11 +63,7 @@ def hw2():
     r = s.check()
     
     # If there's a model/solution return it 
-    if (r == unsat):
-        print("C4 is valid")
-    # otherwise return inconsistent value for error
-    else :
-        print("Here's a counter-example: ", s.model() )
+    valid(r,"C4",s)
     
     #5. ¬¬X ⊢ X
     s.reset()
@@ -90,11 +75,7 @@ def hw2():
     r = s.check()
     
     # If there's a model/solution return it 
-    if (r == unsat):
-        print("C5 is valid")
-    # otherwise return inconsistent value for error
-    else :
-        print("Here's a counter-example: ", s.model() )
+    valid(r,"C5",s)
         
     #6. ¬(X ∧ ¬X)
     s.reset()
@@ -106,15 +87,11 @@ def hw2():
     r = s.check()
     
     # If there's a model/solution return it 
-    if (r == unsat):
-        print("C6 is valid")
-    # otherwise return inconsistent value for error
-    else :
-        print("Here's a counter-example: ", s.model() )
+    valid(r,"C6",s)
 
     #7. X ⊢ X ∨ Y
     s.reset()
-    C7 = Implies(X,Or(And(X,Y),Y))
+    C7 = Implies(X,Or(X,Y))
     
     s.add(Not(C7))
     # I believe it's not valid
@@ -122,15 +99,11 @@ def hw2():
     r = s.check()
     
     # If there's a model/solution return it 
-    if (r == unsat):
-        print("C7 is valid")
-    # otherwise return inconsistent value for error
-    else :
-        print("Here's a counter-example: ", s.model() )
+    valid(r,"C7",s)
         
     #8. Y ⊢ X ∨ Y
     s.reset()
-    C8 = Implies(Y,Or(And(X,Y),Y))
+    C8 = Implies(Y,Or(X,Y))
     
     s.add(Not(C8))
     # I believe it's not valid
@@ -138,11 +111,7 @@ def hw2():
     r = s.check()
     
     # If there's a model/solution return it 
-    if (r == unsat):
-        print("C8 is valid")
-    # otherwise return inconsistent value for error
-    else :
-        print("Here's a counter-example: ", s.model() )
+    valid(r,"C8",s)
     
     #9. X → Y, ¬X ⊢ ¬ Y 
     s.reset()
@@ -154,13 +123,14 @@ def hw2():
     r = s.check()
     
     # If there's a model/solution return it 
-    if (r == unsat):
-        print("C9 is valid")
-    # otherwise return inconsistent value for error
-    else :
-        print("Here's a counter-example: ", s.model() )
+    valid(r,"C9",s)
     
+def valid(r,st,s):
+    if r == unsat:
+        print("Is Valid:" ,st) 
+    else:
+        print ("Is not Valid,", st, "Counter example", s.model())
     
         
-
+    
 hw2()
